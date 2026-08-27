@@ -17,14 +17,13 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
-
+      
+      # 直接在仓库根目录执行构建，不再切换到 ./android
       - name: Build APK
-        working-directory: ./android
         run: ./gradlew assembleRelease
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Veglia-APK
-          path: android/app/build/outputs/apk/release/*.apk
-
+          path: app/build/outputs/apk/release/*.apk

@@ -1,6 +1,7 @@
 name: Build Veglia APK
 on:
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -8,19 +9,22 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y openjdk-21-jdk aapt aapt2 aidl android-tools apksigner d8 zipalign
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
 
       - name: Build APK
-        run: |
-          cd android
-          chmod +x build.sh
-          bash build.sh
+        working-directory: ./android
+        run: ./gradlew assembleRelease
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: veglia-apk
-          path: android/*.apk
+          name: Veglia-APK
+          path: android/app/build/outputs/apk/release/*.apk
+
